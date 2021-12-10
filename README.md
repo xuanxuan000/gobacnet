@@ -1,2 +1,3 @@
-# gobacnet
-gobacnet
+# `gobacnet`
+
+BACnet for go
