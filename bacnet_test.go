@@ -11,14 +11,15 @@ func TestMain(t *testing.T) {
 	fmt.Printf("\nlist:%+v\n", list)
 
 	// para: devid, obj_tag, obj_index,
-	readp, err := Readprop("111", OBJECT_ANALOG_OUTPUT, "101", "85", "1")
+	readp, err := Readprop("111", OBJECT_ANALOG_OUTPUT, "101", PROP_PRESENT_VALUE, "1")
 	if err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Printf("\nreadp:%+v\n", readp)
 	}
 
-	err = Writeprop("111", "1", "101", "85", "16", "-1", "3", "34")
+	err = Writeprop("111", OBJECT_ANALOG_OUTPUT, "101",
+		PROP_PRESENT_VALUE, "16", "-1", BACNET_APPLICATION_TAG_SIGNED_INT, "34")
 	if err != nil {
 		fmt.Println(err)
 	}
