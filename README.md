@@ -25,7 +25,7 @@ Whois("dnet", "123")
 Send a WhoIs request to MAC 10.1.2.3:47808:
 
 ```
-Whois("mac", "10.1.2.3:4780812")
+Whois("mac", "10.1.2.3:47808")
 ```
 
 Send a WhoIs request to Device 123:

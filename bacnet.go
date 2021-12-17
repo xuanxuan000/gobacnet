@@ -9,6 +9,7 @@ package gobacnet
 import "C"
 import (
 	"errors"
+	"strconv"
 	"unsafe"
 )
 
@@ -29,9 +30,10 @@ func Whois(Wtype string, Wvalue string) (res []Who, err error) {
 	return
 }
 
-func Readprop(devID string, objType string, objID string, prop string, index string) (res string, err error) {
+func Readprop(devID uint32, objType string, objID uint32, prop string, index uint32) (res string, err error) {
 	var para []*C.char
-	para = append(para, C.CString(devID), C.CString(objType), C.CString(objID), C.CString(prop), C.CString(index))
+	para = append(para, C.CString(strconv.Itoa(int(devID))), C.CString(objType),
+		C.CString(strconv.Itoa(int(objID))), C.CString(prop), C.CString(strconv.Itoa(int(index))))
 	defer func() {
 		for i := 0; i < len(para); i++ {
 			C.free(unsafe.Pointer(para[i]))
@@ -46,17 +48,61 @@ func Readprop(devID string, objType string, objID string, prop string, index str
 	return
 }
 
-func Writeprop(devID string, objType string, objID string, prop string,
-	priority string, index string, tag string, value string) (err error) {
+func ReadpropM(devID uint32, argv []ReadM_para) (res string, err error) {
+	var paraSli string
+	for _, tmp := range argv {
+		paraSli += tmp.ObjType + "," + strconv.Itoa(int(tmp.ObjInstance)) + "," + tmp.PropAndIndex + ","
+	}
+	paraSli = paraSli[0 : len(paraSli)-1]
+	para1 := C.CString(strconv.Itoa(int(devID)))
+	para2 := C.CString(strconv.Itoa(len(argv)))
+	para3 := C.CString(paraSli)
+	defer func() {
+		C.free(unsafe.Pointer(para1))
+		C.free(unsafe.Pointer(para2))
+		C.free(unsafe.Pointer(para3))
+	}()
+
+	read_res := C.ReadPropM(para1, para2, para3)
+	goread := CArrayToGoArray_char(unsafe.Pointer(read_res), 32)
+	res = string(goread)
+	if res == "&err" {
+		err = errors.New("readpropm err")
+	}
+	return "", nil
+}
+
+func Writeprop(devID uint32, objType string, objID uint32, prop string,
+	priority uint8, index int, tag string, value string) (err error) {
 	var para []*C.char
-	para = append(para, C.CString(devID), C.CString(objType), C.CString(objID),
-		C.CString(prop), C.CString(priority), C.CString(index), C.CString(tag), C.CString(value))
+	para = append(para, C.CString(strconv.Itoa(int(devID))), C.CString(objType), C.CString(strconv.Itoa(int(objID))),
+		C.CString(prop), C.CString(strconv.Itoa(int(priority))), C.CString(strconv.Itoa(index)), C.CString(tag), C.CString(value))
 	defer func() {
 		for i := 0; i < len(para); i++ {
 			C.free(unsafe.Pointer(para[i]))
 		}
 	}()
 	res := C.Writeprop(para[0], para[1], para[2], para[3], para[4], para[5], para[6], para[7])
+	if res != 0 {
+		err = errors.New("writeprop err")
+	}
+	return
+}
+
+func WritepropM(devID uint32, argv []WriteM_para) (err error) {
+	paraSli := strconv.Itoa(int(devID))
+	for _, tmp := range argv {
+		paraSli += "," + tmp.ObjType + "," + strconv.Itoa(int(tmp.ObjInstance)) + "," + tmp.PropAndIndex + "," +
+			strconv.Itoa(int(tmp.Priority)) + "," + tmp.Tag + "," + tmp.Value
+	}
+	para1 := C.CString(strconv.Itoa(len(argv)*6 + 1))
+	para2 := C.CString(paraSli)
+	defer func() {
+		C.free(unsafe.Pointer(para1))
+		C.free(unsafe.Pointer(para2))
+	}()
+
+	res := C.WritePropM(para1, para2)
 	if res != 0 {
 		err = errors.New("writeprop err")
 	}
