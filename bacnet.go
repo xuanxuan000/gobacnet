@@ -30,16 +30,23 @@ func Whois(Wtype string, Wvalue string) (res []Who, err error) {
 	return
 }
 
-func Readprop(devID uint32, objType string, objID uint32, prop string, index uint32) (res string, err error) {
-	var para []*C.char
+func Readprop(devID uint32, objType string, objID uint32, prop string, index int) (res string, err error) {
+	var (
+		para     []*C.char
+		read_res *C.char
+	)
 	para = append(para, C.CString(strconv.Itoa(int(devID))), C.CString(objType),
-		C.CString(strconv.Itoa(int(objID))), C.CString(prop), C.CString(strconv.Itoa(int(index))))
+		C.CString(strconv.Itoa(int(objID))), C.CString(prop), C.CString(strconv.Itoa(index)))
 	defer func() {
 		for i := 0; i < len(para); i++ {
 			C.free(unsafe.Pointer(para[i]))
 		}
 	}()
-	read_res := C.Readprop(para[0], para[1], para[2], para[3], para[4])
+	if index == -1 {
+		read_res = C.Readprop(para[0], para[1], para[2], para[3], nil)
+	} else {
+		read_res = C.Readprop(para[0], para[1], para[2], para[3], para[4])
+	}
 	goread := CArrayToGoArray_char(unsafe.Pointer(read_res), 32)
 	res = string(goread)
 	if res == "&err" {

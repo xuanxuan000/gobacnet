@@ -11,27 +11,33 @@ func TestMain(t *testing.T) {
 	fmt.Printf("\nlist:%+v\n", list)
 
 	// para: devid, objType, objID, prop, index
-	readp, err := Readprop(111, OBJECT_ANALOG_OUTPUT, 101, PROP_PRESENT_VALUE, 1)
+	readp, err := Readprop(192000, OBJECT_ANALOG_INPUT, 1, PROP_PRESENT_VALUE, -1) // -1表示非array
 	if err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Printf("\nreadp:%+v\n", readp)
 	}
+	// readp, err := Readprop(111, OBJECT_ANALOG_INPUT, 5, PROP_PRESENT_VALUE, -1) // -1表示非array
+	// if err != nil {
+	// 	fmt.Println(err)
+	// } else {
+	// 	fmt.Printf("\nreadp:%+v\n", readp)
+	// }
 
 	// para: devid, objType, objID, prop, priority, index, tag, value
-	err = Writeprop(111, OBJECT_ANALOG_OUTPUT, 101,
+	err = Writeprop(192000, OBJECT_BINARY_VALUE, 5,
 		PROP_PRESENT_VALUE, 16, -1, BACNET_APPLICATION_TAG_SIGNED_INT, "34")
 	if err != nil {
 		fmt.Println(err)
 	}
 
 	// para: devid, objType, objID, prop, index
-	tmp1 := ReadM_para{OBJECT_ANALOG_INPUT, 5, PROP_PRESENT_VALUE}
-	tmp2 := ReadM_para{OBJECT_ANALOG_INPUT, 5, PROP_PRESENT_VALUE}
+	tmp1 := ReadM_para{OBJECT_ANALOG_INPUT, 1, PROP_PRESENT_VALUE}
+	tmp2 := ReadM_para{OBJECT_MULTI_STATE_VALUE, 2, PROP_PRESENT_VALUE}
 	var parasli []ReadM_para
 	parasli = append(parasli, tmp1)
 	parasli = append(parasli, tmp2)
-	readp, err = ReadpropM(111, parasli)
+	readp, err = ReadpropM(192000, parasli)
 	if err != nil {
 		fmt.Println(err)
 	} else {
