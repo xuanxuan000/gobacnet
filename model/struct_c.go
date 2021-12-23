@@ -6,6 +6,9 @@ typedef struct WhoIs
 {
 	uint32_t Device;
 	uint8_t Mac[6];
+	uint16_t Net;
+	uint8_t Adr[6];
+	uint32_t Max_apdu;
 }Who;
 
 typedef struct Whois_list_array{
@@ -13,16 +16,8 @@ typedef struct Whois_list_array{
 	int capacity;
 	Who* array;
 }Wl_array;
-
-typedef struct ReadPropM_Para
-{
-	char* objType;
-	char* objInstance;
-	char* propAndIndex;
-}ReadM_para;
 */
 import "C"
 
 type Who C.Who
 type Wl_array C.Wl_array
-type ReadM_para C.ReadM_para

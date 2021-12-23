@@ -4,11 +4,14 @@
 package gobacnet
 
 type Who struct {
-	Device uint32
-	Mac    [6]uint8
+	Device	uint32
+	Mac	[6]uint8
+	Net	uint16
+	Adr	[6]uint8
+	Apdu	uint32
 }
 type Wl_array struct {
-	Size     int32
-	Capacity int32
-	Array    *Who
+	Size		int32
+	Capacity	int32
+	Array		*Who
 }
