@@ -76,7 +76,7 @@ func ReadpropM(devID uint32, argv []ReadM_para) (res string, err error) {
 	if res == "&err" {
 		err = errors.New("readpropm err")
 	}
-	return "", nil
+	return
 }
 
 func Writeprop(devID uint32, objType string, objID uint32, prop string,
