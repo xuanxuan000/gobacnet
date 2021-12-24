@@ -8,7 +8,7 @@ package gobacnet
 //#include "stdlib.h"
 import "C"
 import (
-	"errors"
+	"fmt"
 	"strconv"
 	"unsafe"
 )
@@ -50,7 +50,7 @@ func Readprop(devID uint32, objType string, objID uint32, prop string, index int
 	goread := CArrayToGoArray_char(unsafe.Pointer(read_res), 32)
 	res = string(goread)
 	if res == "&err" {
-		err = errors.New("readprop err")
+		err = fmt.Errorf("devID:%v readprop err", devID)
 	}
 	return
 }
@@ -74,7 +74,7 @@ func ReadpropM(devID uint32, argv []ReadM_para) (res string, err error) {
 	goread := CArrayToGoArray_char(unsafe.Pointer(read_res), 32)
 	res = string(goread)
 	if res == "&err" {
-		err = errors.New("readpropm err")
+		err = fmt.Errorf("devID:%v readpropm err", devID)
 	}
 	return
 }
@@ -91,7 +91,7 @@ func Writeprop(devID uint32, objType string, objID uint32, prop string,
 	}()
 	res := C.Writeprop(para[0], para[1], para[2], para[3], para[4], para[5], para[6], para[7])
 	if res != 0 {
-		err = errors.New("writeprop err")
+		err = fmt.Errorf("devID:%v writeprop err", devID)
 	}
 	return
 }
@@ -111,7 +111,7 @@ func WritepropM(devID uint32, argv []WriteM_para) (err error) {
 
 	res := C.WritePropM(para1, para2)
 	if res != 0 {
-		err = errors.New("writeprop err")
+		err = fmt.Errorf("devID:%v writeprop err", devID)
 	}
 	return
 }
@@ -122,7 +122,7 @@ func WritepropM(devID uint32, argv []WriteM_para) (err error) {
 // 	cStruct := C.Whois((*C.char)(unsafe.Pointer(arg0.Data)), (*C.char)(unsafe.Pointer(arg1.Data)))
 // 	res = CArrayToGoArray_Who(unsafe.Pointer(cStruct.array), int(cStruct.size))
 // 	if len(res) == 0 {
-// 		err = errors.New("Whois err")
+// 		err = fmt.Errorf("Whois err")
 // 		fmt.Println(err)
 // 	}
 // 	return
@@ -141,7 +141,7 @@ func WritepropM(devID uint32, argv []WriteM_para) (err error) {
 // 		(*C.char)(unsafe.Pointer(arg4.Data)))
 // 	res = string(CArrayToGoArray_char(unsafe.Pointer(cRes), 32))
 // 	if len(res) == 0 {
-// 		err = errors.New("Readprop err")
+// 		err = fmt.Errorf("Readprop err")
 // 		fmt.Println(err)
 // 	}
 // 	return
