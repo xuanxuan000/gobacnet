@@ -1,9 +1,9 @@
 package gobacnet
 
-//#cgo amd64 CFLAGS: -I./lib_amd
-//#cgo arm64 CFLAGS: -I./lib_arm
-//#cgo amd64 LDFLAGS: -L${SRCDIR}/lib_amd -lbac
-//#cgo arm64 LDFLAGS: -L${SRCDIR}/lib_arm -lbac
+//#cgo amd64 CFLAGS: -I./lib_amd_ubuntu14
+//#cgo arm64 CFLAGS: -I./lib_arm_ubuntu14
+//#cgo amd64 LDFLAGS: -L${SRCDIR}/lib_amd_ubuntu14 -lbac
+//#cgo arm64 LDFLAGS: -L${SRCDIR}/lib_arm_ubuntu14 -lbac
 //
 //#include "bac.h"
 //#include "struct.h"
