@@ -12,6 +12,7 @@ import "C"
 import (
 	"fmt"
 	"strconv"
+	"strings"
 	"unsafe"
 )
 
@@ -51,7 +52,7 @@ func Readprop(devID uint32, objType string, objID uint32, prop string, index int
 	}
 	goread := CArrayToGoArray_char(unsafe.Pointer(read_res), 32)
 	res = string(goread)
-	if res == "&err" {
+	if strings.Contains(res, "&err") {
 		err = fmt.Errorf("devID:%v readprop err", devID)
 	}
 	return
@@ -75,7 +76,7 @@ func ReadpropM(devID uint32, argv []ReadM_para) (res string, err error) {
 	read_res := C.ReadPropM(para1, para2, para3)
 	goread := CArrayToGoArray_char(unsafe.Pointer(read_res), 32)
 	res = string(goread)
-	if res == "&err" {
+	if strings.Contains(res, "&err") {
 		err = fmt.Errorf("devID:%v readpropm err", devID)
 	}
 	return
