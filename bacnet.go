@@ -77,7 +77,7 @@ func ReadpropM(devID uint32, argv []ReadM_para) (res string, err error) {
 	goread := CArrayToGoArray_char(unsafe.Pointer(read_res), 32)
 	res = string(goread)
 	if strings.Contains(res, "&err") {
-		err = fmt.Errorf("devID:%v readpropm err", devID)
+		err = fmt.Errorf("devID:%v readpropm err\nparams:%+v\nerr:%s", devID, argv, res)
 	}
 	return
 }
@@ -114,7 +114,7 @@ func WritepropM(devID uint32, argv []WriteM_para) (err error) {
 
 	res := C.WritePropM(para1, para2)
 	if res != 0 {
-		err = fmt.Errorf("devID:%v writeprop err", devID)
+		err = fmt.Errorf("devID:%v writeprop err\nparams:%+v", devID, argv)
 	}
 	return
 }
